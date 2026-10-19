@@ -17,6 +17,9 @@ All notable changes to this project are documented here. The format follows
     nothing is left behind, backs up, archives the repo and deletes every copy.
   - Troubleshooting: missed-slot runs, transient `Poll error: fetch failed`, code missing
     from the copy, leftover run logs.
+- `migrate-worker-to-factory` installs lib-factory `v0.2.0` and checks steps with
+  `npx factory steps list` (the command ships with lib-factory); `al-factory` is no longer
+  a prerequisite.
 
 ## [0.1.0] - 2026-10-19
 

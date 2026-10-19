@@ -9,7 +9,7 @@ What changes between a repo on `@fob/lib-worker` 0.35.0 and one on
 | Where | Worker | Factory | |
 |---|---|---|---|
 | `package.json` name | `worker-<name>` | `factory-<name>` | script |
-| `package.json` dependency | `"@fob/lib-worker": "github:finopsbricks/lib-worker#v0.35.0"` | `"@assemblyline/lib-factory": "github:assemblyline-sh/lib-factory#v0.1.0"` | script |
+| `package.json` dependency | `"@fob/lib-worker": "github:finopsbricks/lib-worker#v0.35.0"` | `"@assemblyline/lib-factory": "github:assemblyline-sh/lib-factory#v0.2.0"` | script |
 | Imports | `from '@fob/lib-worker'` | `from '@assemblyline/lib-factory'` | script |
 | Entry point | `startWorker({ getHandler, callerUrl })` | `startFactory({ getHandler, callerUrl })` | script |
 | Env | `WORKER_LOCATION` | `FACTORY_LOCATION` | script (`.env.example`, `src/`, `scripts/`, `tests/`) |
@@ -18,7 +18,7 @@ What changes between a repo on `@fob/lib-worker` 0.35.0 and one on
 | Env, unchanged | `ORCHESTRATOR_URL`, `ORCHESTRATOR_API_KEY`, `ORCHESTRATOR_API_SECRET`, `POLL_INTERVAL_MS` | same | |
 | Layout, unchanged | `.orchestrator/{lines,stations,scenarios}`, `temp/stations/<ST>/<bin>/`, `pointer.json`, `log.jsonl` | same | |
 | Station libraries, unchanged | `@fob/lib-worker-ai`, `@fob/lib-worker-email`, `@fob/lib-worker-google`, `@fob/stm` | same: none of them imports lib-worker | |
-| CLIs | `fob-worker`, `fob-orc` | `al-factory`, `al-orc` (same commands) | docs: by hand |
+| CLIs | `fob-worker`, `fob-orc` | `al-factory`, `al-orc` (same commands); `fob-worker steps …` is `npx factory steps …` (ships with lib-factory) | docs: by hand |
 | CLI config | `~/.fob/fob-orc/config.yml` | `~/.assemblyline/al-orc/config.yml` | |
 
 ## Removed from the runtime

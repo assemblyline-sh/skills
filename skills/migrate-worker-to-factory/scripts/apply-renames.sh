@@ -3,12 +3,12 @@
 # root, after the copy and before any hand edits. Docs, comments and removed APIs are left
 # for you; the script lists what it couldn't decide.
 #
-#   apply-renames.sh <factory-name> <org> [lib-factory tag, default v0.1.0]
+#   apply-renames.sh <factory-name> <org> [lib-factory tag, default v0.2.0]
 set -euo pipefail
 
 name="${1:?usage: apply-renames.sh <factory-name> <org> [tag]}"
 org="${2:?usage: apply-renames.sh <factory-name> <org> [tag]}"
-tag="${3:-v0.1.0}"
+tag="${3:-v0.2.0}"
 url="https://orchestrator.assemblyline.sh"
 
 [[ -f package.json ]] || { echo "Run from the repo root" >&2; exit 1; }
@@ -63,4 +63,4 @@ echo "Left for you (see name-map.md):"
 grep -rnE "findItemByExternalId|createItem|findOrCreateItem|runProcess|item_snapshot|splitBundlesStep|moveFiles\(|validateEnv\([^)]+\)|@fob/lib-worker['\"]" src scripts tests test 2>/dev/null | sed 's/^/  /' || true
 echo "  docs and comments that say worker: $(grep -rliE '\bworker\b' --include='*.md' . 2>/dev/null | grep -v node_modules | wc -l | tr -d ' ') markdown files"
 echo
-echo "Next: npm install, npm test, npm run typecheck, al-factory steps list"
+echo "Next: npm install, npm test, npm run typecheck, npx factory steps list"

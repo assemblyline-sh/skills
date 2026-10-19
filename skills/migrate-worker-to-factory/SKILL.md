@@ -36,7 +36,7 @@ The migration has two halves, and they're done at different speeds:
 
 Check these and stop if one fails; the fix is in [troubleshooting.md](troubleshooting.md).
 
-- `al-orc` and `al-factory` are installed. `al-orc status` shows the right org on the Assembly
+- `al-orc` is installed. `al-orc status` shows the right org on the Assembly
   Line orchestrator. If the org was imported from FinOpsBricks, the worker's existing API key
   works there: copy its profile from `~/.fob/fob-orc/config.yml` with the URL changed
   ([cutover.md](cutover.md#cli-profiles)).
@@ -102,7 +102,8 @@ Then switch every trigger off in the station files: `schedule_enabled: false` an
 - `npm install`, then `npm test` and `npm run typecheck`. Run both in the worker repo first
   and compare: tests that already failed there may fail here, and the typecheck may have
   fewer errors (lib-factory fixed some JSDoc types), but nothing new may appear.
-- `al-factory steps list` loads every step. Run one read-only step locally if there is one.
+- `npx factory steps list` loads every step. Run one read-only step locally if there is one
+  (`npx factory steps run <slug> --station <CODE>`).
 - Push the lines and stations the plan covers, one by one so lines from other repos aren't
   touched: `al-orc lines push <CODE>` and `al-orc stations push <file> --force` (keeps ids,
   so `dependencies` still resolve).
