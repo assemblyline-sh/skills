@@ -15,6 +15,10 @@ Problems met in earlier migrations, and what fixed them.
 | Boot error: `has no line` / no `.orchestrator/lines/` | Repo from before lib-worker 0.33.0 | `al-orc lines pull --all`, then add `line` to each station file |
 | Boot error about `watch_enabled` without a conveyor or `watch_path` | A watched line-head with no inbox to watch | Give step 0 a `watch_path`, or schedule it instead |
 | `npm install` fails on `github:assemblyline-sh/lib-factory` | No access to the repo, or the tag doesn't exist | Check `git ls-remote git@github.com:assemblyline-sh/lib-factory.git` and the tag in `package.json` |
+| A station ran the moment its schedule went on, not at the next slot | A slot was missed since `last_run_at`, and the scheduler catches it up | Expected. Switch schedules on just after a slot, and use that run as the first check |
+| `Poll error: fetch failed` a few times in the factory log, then normal | A short network drop between the machine and the orchestrator; the session polls again | Nothing to do if it stops on its own. If it repeats, check the machine's network and `ORCHESTRATOR_URL` |
+| The factory copy is missing code the worker runs | The worker's checkout had uncommitted or unpushed changes when it was copied | Commit and push them in the worker, then pull them into the factory repo (`git pull finopsbricks main`) and redo the renames on the new files |
 | Jest aborts with a Watchman `dyld` or socket error | A broken Watchman install, unrelated to the migration | `npm test -- --no-watchman` |
 | Tests fail after the conversion | Compare with the worker repo first: suites that import moved files may already fail there | Only new failures count |
+| The worker folder can't be deleted: the factory lacks `temp/work_records/` | The run logs weren't carried at the stop | `rsync -a --ignore-existing <worker>/temp/work_records/ <factory>/temp/work_records/`, then retire as in cutover.md |
 | A secret appeared in the output | A command printed `.env` values | Tell the user, and rotate that key once the migration is done |

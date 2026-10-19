@@ -29,6 +29,17 @@ echo "files with hits:"
 # shellcheck disable=SC2086
 grep -rlE "@fob/lib-worker'|startWorker|WORKER_|item_snapshot|runProcess|createItem|findItemByExternalId|splitBundlesStep" $src_dirs 2>/dev/null | sed 's/^/  /' || true
 
+section "Git state (commit and push before copying)"
+echo "branch: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '(not a git repo)')  head: $(git rev-parse --short HEAD 2>/dev/null || echo -)"
+changed=$(git status --porcelain 2>/dev/null | { grep -v '^??' || true; } | wc -l | tr -d ' ')
+untracked=$(git status --porcelain 2>/dev/null | { grep '^??' || true; } | wc -l | tr -d ' ')
+unpushed=$(git rev-list --count '@{u}..HEAD' 2>/dev/null || echo "no upstream")
+echo "uncommitted changes: $changed  untracked files: $untracked  unpushed commits: $unpushed"
+if [[ $changed != 0 || $unpushed != 0 ]]; then
+  echo "  -> commit and push these first, or the factory copy won't have them"
+fi
+echo "Compare with the checkout on the machine that runs the worker: same head, same diff?"
+
 section "Lines (location) and the stations in this repo that belong to each"
 node -e '
   const fs = require("fs"), path = require("path");

@@ -46,8 +46,8 @@ Check these and stop if one fails; the fix is in [troubleshooting.md](troublesho
 
 ## Phase 1: Survey
 
-Run `scripts/scan-worker.sh <worker-dir>` and read the whole output. It lists the lib-worker
-version, the imports and calls to rename, each line with its location and the stations that
+Run `scripts/scan-worker.sh <worker-dir>` and read the whole output. It lists the git state,
+the lib-worker version, the imports and calls to rename, each line with its location and the stations that
 belong to it, each station's triggers, the intake registries in `temp/`, and the env key
 names.
 
@@ -58,6 +58,10 @@ outside systems on a schedule go last. The table format and how to judge each co
 [run-plan.md](run-plan.md).
 
 Watch for:
+- **Uncommitted or unpushed changes**, here or in the checkout on the machine that runs the
+  worker (`git status --short` and `git rev-parse HEAD` there). The running worker may be
+  ahead of the repo. Settle it first, with the user's yes: commit and push in the worker,
+  then pull on the machine, so both checkouts and the copy start from the same commit.
 - Line files for lines whose stations live in another repo. A line belongs to the repo that
   holds its station files; leave the others out of the plan.
 - A lib-worker older than 0.35.0: it brings extra breaking changes
@@ -116,7 +120,10 @@ bin watcher's warning should list every station as untriggered. Details:
 
 ## Phase 6: Move the lines, one at a time
 
-For each line in plan order, follow [cutover.md](cutover.md#move-one-line). In short:
+When every line in the plan moves to this one factory session and the user is fine with a
+short pause, there's a simpler path: stop the worker, copy all of `temp/stations/` at once and
+switch every line on together ([cutover.md](cutover.md#move-every-line-at-once)). Otherwise,
+for each line in plan order, follow [cutover.md](cutover.md#move-one-line). In short:
 
 1. Switch its triggers off on FinOpsBricks (schedule flags in the worker's station files,
    pushed with `fob-orc stations push`, committed in the worker repo). Do it before the
@@ -127,7 +134,9 @@ For each line in plan order, follow [cutover.md](cutover.md#move-one-line). In s
    checkout, intake registries included. Without them the line-head treats everything it
    has ever seen as new.
 4. Switch its triggers on in the factory's station files, push those stations, commit, pull
-   on the machine and restart the factory session (watches are read at start).
+   on the machine and restart the factory session (watches are read at start). A schedule
+   switched on after a missed slot runs that slot at once, so switch on just after a slot
+   and expect one immediate run.
 5. Watch the next scheduled run and start one by hand with `al-orc stations run <HEAD>`. The
    report should show already-captured items skipped, not seeded again.
 
@@ -136,13 +145,21 @@ Update the WIP after every line.
 ## Phase 7: Stop the worker
 
 When every line in the plan has moved, check that nothing else of the worker is active on
-FinOpsBricks, then (after a yes) `pm2 stop worker-<name> && pm2 save`. Keep it stopped, not
+FinOpsBricks, then (after a yes) `pm2 stop worker-<name> && pm2 save`. Copy the worker's
+local run logs too, so the factory holds its full history: `rsync -a --ignore-existing
+<worker>/temp/work_records/ <factory>/temp/work_records/`. Keep the worker stopped, not
 deleted, for a week. Record in the WIP what moved, what stayed and why, and anything that
 broke. Suggest rotating the API key if it was ever displayed.
+
+After the week, offer to retire the worker so it doesn't linger: check that nothing outside
+git is left behind, keep a backup, archive the GitHub repo, delete the checkout on every
+machine and the pm2 entry ([cutover.md](cutover.md#retire-the-worker)). Ask before each
+of these; deleting and archiving are the user's call.
 
 ## Related
 
 - [name-map.md](name-map.md): every rename, and the breaking changes by lib-worker version
 - [run-plan.md](run-plan.md): how to judge each line and order the moves
-- [cutover.md](cutover.md): CLI profiles, starting the session, moving one line, rollback
+- [cutover.md](cutover.md): CLI profiles, starting the session, moving lines, rollback,
+  retiring the worker
 - [troubleshooting.md](troubleshooting.md): what went wrong in earlier migrations
