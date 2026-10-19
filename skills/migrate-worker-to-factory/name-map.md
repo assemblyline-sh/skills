@@ -18,7 +18,7 @@ What changes between a repo on `@fob/lib-worker` 0.35.0 and one on
 | Env, unchanged | `ORCHESTRATOR_URL`, `ORCHESTRATOR_API_KEY`, `ORCHESTRATOR_API_SECRET`, `POLL_INTERVAL_MS` | same | |
 | Layout, unchanged | `.orchestrator/{lines,stations,scenarios}`, `temp/stations/<ST>/<bin>/`, `pointer.json`, `log.jsonl` | same | |
 | Station libraries, unchanged | `@fob/lib-worker-ai`, `@fob/lib-worker-email`, `@fob/lib-worker-google`, `@fob/stm` | same: none of them imports lib-worker | |
-| CLIs | `fob-worker`, `fob-orc` | `al-factory`, `al-orc` (same commands); `fob-worker steps …` is `npx factory steps …` (ships with lib-factory) | docs: by hand |
+| CLIs | `fob-worker`, `fob-orc` | `fob-orc` → `al-orc` (same commands). `fob-worker steps …` → `npx factory steps …` (ships with lib-factory); `fob-worker lines/stations/workpieces/procs …` → `al-control … -f .` | docs: by hand |
 | CLI config | `~/.fob/fob-orc/config.yml` | `~/.assemblyline/al-orc/config.yml` | |
 
 ## Removed from the runtime
