@@ -1,0 +1,16 @@
+{
+  "name": "assemblyline",
+  "description": "Assembly Line skills for Claude Code: design, build, debug and migrate factory lines.",
+  "owner": {
+    "name": "Assembly Line",
+    "url": "https://assemblyline.sh"
+  },
+  "plugins": [
+    {
+      "name": "assemblyline",
+      "source": "./",
+      "description": "Skills for building and running Assembly Line factories: design, build, debug and migrate lines and stations.",
+      "version": "0.1.0"
+    }
+  ]
+}

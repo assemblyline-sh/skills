@@ -1,0 +1,11 @@
+{
+  "name": "assemblyline",
+  "displayName": "Assembly Line",
+  "description": "Skills for building and running Assembly Line factories: design, build, debug and migrate lines and stations.",
+  "version": "0.1.0",
+  "author": { "name": "Assembly Line", "url": "https://assemblyline.sh" },
+  "homepage": "https://assemblyline.sh",
+  "repository": "https://github.com/assemblyline-sh/skills",
+  "license": "MIT",
+  "keywords": ["assemblyline", "factory", "workflow-automation", "ai-agents", "claude-code", "skills"]
+}
